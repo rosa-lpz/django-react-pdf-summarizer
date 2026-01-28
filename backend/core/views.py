@@ -31,7 +31,7 @@ class SummarizeView(APIView):
         vectorstore = service.process_document(doc.text_content)
         prompt = f"Summarize this scientific article: {doc.text_content[:5000]}..."  # Truncate for demo
         summary = service.llm.invoke(prompt)
-        return Response({'summary': summary})
+        return Response({'summary': summary.content})
     
 
 class QueryView(APIView):
@@ -45,4 +45,4 @@ class QueryView(APIView):
         context = "\n".join([d.page_content for d in docs])
         rag_prompt = f"Answer based on this article context: {context}\nQuestion: {query}"
         answer = service.llm.invoke(rag_prompt)
-        return Response({'answer': answer, 'sources': [d.metadata for d in docs]})
+        return Response({'answer': answer.content, 'sources': [d.metadata for d in docs]})

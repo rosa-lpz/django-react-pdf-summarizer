@@ -7,7 +7,8 @@ const SummaryPanel = ({ summary, isLoading }) => {
 
   const handleCopy = async () => {
     if (summary) {
-      await navigator.clipboard.writeText(summary);
+      const textToCopy = typeof summary === 'string' ? summary : (summary.content || JSON.stringify(summary));
+      await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -59,7 +60,7 @@ const SummaryPanel = ({ summary, isLoading }) => {
           </div>
         ) : summary ? (
           <div className="markdown-content animate-fadeIn">
-            <ReactMarkdown>{summary}</ReactMarkdown>
+            <ReactMarkdown>{typeof summary === 'string' ? summary : (summary.content || JSON.stringify(summary))}</ReactMarkdown>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-center">

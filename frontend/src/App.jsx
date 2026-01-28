@@ -86,7 +86,7 @@ function App() {
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800/50 border border-gray-700 text-xs text-gray-400">
                 <Brain className="w-3.5 h-3.5" />
-                <span>Powered by TinyLlama</span>
+                <span>Powered by Gemini AI</span>
               </div>
               <a
                 href="https://github.com"
