@@ -24,7 +24,7 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 
 ### Summarizer
 
-![article -summary](img/article -summary.gif)
+![article -summary](img/article-summary.gif)
 
 ### Q&A Chat
 
