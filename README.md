@@ -8,12 +8,6 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 ![LangChain](https://img.shields.io/badge/LangChain-Enabled-purple)
 ![Gemini](https://img.shields.io/badge/Gemini-AI-orange)
 
-
-
-![img](img.png)
-
-
-
 ## Features
 
 - 📄 **PDF Upload & Text Extraction** - Upload scientific PDFs and automatically extract text using PyMuPDF
@@ -21,6 +15,26 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 - 💬 **Interactive Q&A** - Ask questions about your documents with RAG (Retrieval Augmented Generation)
 - 🔍 **Vector Search** - FAISS-powered semantic search with Gemini embeddings for accurate answers
 - 🎨 **Modern UI** - Beautiful React frontend with Tailwind CSS and dark theme
+
+
+
+## Images
+
+![img](img/img.png)
+
+### Summarizer
+
+![article -summary](img/article -summary.gif)
+
+### Q&A Chat
+
+![q&a](img/q&a.gif)
+
+
+
+
+
+
 
 ## Architecture
 
