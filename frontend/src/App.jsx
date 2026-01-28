@@ -193,12 +193,11 @@ function App() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-400">
-              Built with Django, React & LangChain
+              Built with Django, React & Gemini AI
             </p>
             <div className="flex items-center gap-4 text-sm text-gray-400">
-              <span>Open Source LLM</span>
+              <span>LLM</span>
               <span>•</span>
-              <span>FAISS Vector Store</span>
               <span>•</span>
               <span>MCP Ready</span>
             </div>

@@ -2,6 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { MessageSquare, Send, User, Bot, Loader2, Sparkles, BookOpen } from 'lucide-react';
 
+// Extract text content from various LLM response formats
+const extractTextContent = (content) => {
+  if (typeof content === 'string') return content;
+  if (Array.isArray(content)) {
+    // Handle Gemini API format: [{type: 'text', text: '...'}]
+    const textPart = content.find(item => item.type === 'text');
+    if (textPart?.text) return textPart.text;
+    return content.map(item => item.text || JSON.stringify(item)).join('');
+  }
+  if (content?.content) return extractTextContent(content.content);
+  if (content?.text) return content.text;
+  return JSON.stringify(content);
+};
+
 const ChatInterface = ({ onSendQuery, isProcessing, documentId }) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -140,7 +154,7 @@ const ChatInterface = ({ onSendQuery, isProcessing, documentId }) => {
                   <p className="text-white">{message.content}</p>
                 ) : (
                   <div className="markdown-content text-sm">
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                    <ReactMarkdown>{extractTextContent(message.content)}</ReactMarkdown>
                   </div>
                 )}
                 

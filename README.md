@@ -1,11 +1,12 @@
 # PDF Summarizer - AI-Powered Scientific Article Analysis
 
-A full-stack application that summarizes PDF scientific articles with interactive Q&A capabilities. Built with Django (backend), React (frontend), and LangChain with an open-source LLM (TinyLlama) for processing.
+A full-stack application that summarizes PDF scientific articles with interactive Q&A capabilities. Built with Django (backend), React (frontend), and LangChain with Google Gemini AI for processing.
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![Django](https://img.shields.io/badge/Django-5.2-green)
 ![React](https://img.shields.io/badge/React-18.3-blue)
 ![LangChain](https://img.shields.io/badge/LangChain-Enabled-purple)
+![Gemini](https://img.shields.io/badge/Gemini-AI-orange)
 
 
 
@@ -15,30 +16,36 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 
 ## Features
 
-- 📄 **PDF Upload & Text Extraction** - Upload scientific PDFs and automatically extract text
-- 🤖 **AI-Powered Summarization** - Generate concise summaries using TinyLlama LLM
+- 📄 **PDF Upload & Text Extraction** - Upload scientific PDFs and automatically extract text using PyMuPDF
+- 🤖 **AI-Powered Summarization** - Generate concise summaries using Google Gemini AI
 - 💬 **Interactive Q&A** - Ask questions about your documents with RAG (Retrieval Augmented Generation)
-- 🔍 **Vector Search** - FAISS-powered semantic search for accurate answers
-- 🎨 **Modern UI** - Beautiful React frontend with Tailwind CSS
+- 🔍 **Vector Search** - FAISS-powered semantic search with Gemini embeddings for accurate answers
+- 🎨 **Modern UI** - Beautiful React frontend with Tailwind CSS and dark theme
 
 ## Architecture
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │                 │     │                 │     │                 │
-│  React Frontend │────▶│  Django Backend │────▶│  TinyLlama LLM  │
-│   (Vite + TW)   │     │   (REST API)    │     │  (HuggingFace)  │
+│  React Frontend │────▶│  Django Backend │────▶│  Google Gemini  │
+│   (Vite + TW)   │     │   (REST API)    │     │       AI        │
 │                 │     │                 │     │                 │
 └─────────────────┘     └────────┬────────┘     └─────────────────┘
                                  │
                                  ▼
                         ┌─────────────────┐
-                        │                 │
-                        │  FAISS Vector   │
-                        │     Store       │
-                        │                 │
+                        │   FAISS Vector  │
+                        │      Store      │
+                        │  (Gemini Emb.)  │
                         └─────────────────┘
 ```
+
+### How RAG Works
+
+1. **Document Processing**: PDF text is split into chunks and embedded using Gemini embeddings
+2. **Vector Storage**: Chunks are stored in FAISS for fast similarity search
+3. **Query Processing**: User questions trigger similarity search to find relevant chunks
+4. **Answer Generation**: Relevant context + question are sent to Gemini for accurate answers
 
 ## Prerequisites
 
@@ -52,7 +59,7 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 django-react-pdf-summarizer/
 ├── backend/
 │   ├── core/                 # Main Django app
-│   │   ├── models.py         # Document & ChatSession models
+│   │   ├── models.py         # Document model
 │   │   ├── views.py          # API endpoints
 │   │   ├── services.py       # LLM & Vector store logic
 │   │   ├── serializers.py    # DRF serializers
@@ -62,6 +69,10 @@ django-react-pdf-summarizer/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/       # React components
+│   │   │   ├── ChatInterface.jsx
+│   │   │   ├── DocumentInfo.jsx
+│   │   │   ├── FileUploader.jsx
+│   │   │   └── SummaryPanel.jsx
 │   │   ├── services/         # API service
 │   │   ├── App.jsx           # Main app component
 │   │   └── main.jsx          # Entry point
@@ -95,10 +106,9 @@ source ../pdfsummarizervenv/bin/activate
 
 # Install Python dependencies
 pip install django djangorestframework django-cors-headers
-pip install torch transformers accelerate
-pip install langchain langchain-community langchain-text-splitters
-pip install faiss-cpu sentence-transformers
-pip install pymupdf
+pip install langchain langchain-community langchain-text-splitters langchain-google-genai
+pip install faiss-cpu
+pip install pymupdf python-dotenv
 
 # Run migrations
 python manage.py migrate
@@ -201,9 +211,9 @@ VITE_API_URL=http://localhost:8000/core
 - **Django 5.2** - Web framework
 - **Django REST Framework** - API development
 - **LangChain** - LLM orchestration
-- **TinyLlama** - Open-source LLM (1.1B parameters)
+- **Google Gemini AI** - LLM for summarization and Q&A (gemini-3-flash-preview)
+- **Gemini Embeddings** - Text embeddings (gemini-embedding-001)
 - **FAISS** - Vector similarity search
-- **Sentence Transformers** - Text embeddings
 - **PyMuPDF** - PDF text extraction
 
 ### Frontend
@@ -215,6 +225,16 @@ VITE_API_URL=http://localhost:8000/core
 - **React Markdown** - Markdown rendering
 - **Lucide React** - Icons
 
+## Environment Variables
+
+Create a `.env` file in the `backend/` directory:
+
+```env
+GEMINI_API_KEY=your-google-gemini-api-key
+```
+
+Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+
 ## Troubleshooting
 
 ### Common Issues
@@ -225,19 +245,20 @@ Make sure django-cors-headers is installed and configured:
 pip install django-cors-headers
 ```
 
-**2. Model Loading Slow**
-The first request will download the TinyLlama model (~2.2GB). Subsequent requests will be faster.
+**2. Gemini API Key Missing**
+Ensure you have set your `GEMINI_API_KEY` in the backend `.env` file or Django settings.
 
-**3. Out of Memory**
-If running on CPU with limited RAM, the model may fail to load. Try:
-- Using a machine with at least 8GB RAM
-- Running with GPU if available
+**3. API Rate Limits**
+Google Gemini has rate limits on the free tier. If you hit limits, wait a moment and retry.
 
 **4. PDF Upload Fails**
 Ensure the media directory exists:
 ```bash
 mkdir -p backend/media/pdfs
 ```
+
+**5. JSON in Response**
+If you see raw JSON with `type`, `text`, `signature` fields, ensure you're using the latest frontend code that properly extracts text content from Gemini responses.
 
 ## Development
 
@@ -274,4 +295,4 @@ MIT License - see LICENSE file for details.
 
 ---
 
-**Note:** This project uses TinyLlama, a lightweight open-source LLM. For production use with better quality responses, consider using larger models like Mistral-7B or Llama-2-13B if you have sufficient hardware resources.
+**Note:** This project uses Google Gemini AI (gemini-3-flash-preview) which provides high-quality responses with fast inference. You can switch to other Gemini models like `gemini-pro` or `gemma-3-27b-it` by modifying the model name in `backend/core/services.py`.

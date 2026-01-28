@@ -2,13 +2,26 @@ import ReactMarkdown from 'react-markdown';
 import { BookOpen, Copy, Check, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
+// Extract text content from various LLM response formats
+const extractTextContent = (content) => {
+  if (typeof content === 'string') return content;
+  if (Array.isArray(content)) {
+    // Handle Gemini API format: [{type: 'text', text: '...'}]
+    const textPart = content.find(item => item.type === 'text');
+    if (textPart?.text) return textPart.text;
+    return content.map(item => item.text || JSON.stringify(item)).join('');
+  }
+  if (content?.content) return extractTextContent(content.content);
+  if (content?.text) return content.text;
+  return JSON.stringify(content);
+};
+
 const SummaryPanel = ({ summary, isLoading }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     if (summary) {
-      const textToCopy = typeof summary === 'string' ? summary : (summary.content || JSON.stringify(summary));
-      await navigator.clipboard.writeText(textToCopy);
+      await navigator.clipboard.writeText(extractTextContent(summary));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -60,7 +73,7 @@ const SummaryPanel = ({ summary, isLoading }) => {
           </div>
         ) : summary ? (
           <div className="markdown-content animate-fadeIn">
-            <ReactMarkdown>{typeof summary === 'string' ? summary : (summary.content || JSON.stringify(summary))}</ReactMarkdown>
+            <ReactMarkdown>{extractTextContent(summary)}</ReactMarkdown>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-center">
