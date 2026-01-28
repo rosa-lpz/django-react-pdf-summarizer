@@ -7,6 +7,12 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 ![React](https://img.shields.io/badge/React-18.3-blue)
 ![LangChain](https://img.shields.io/badge/LangChain-Enabled-purple)
 
+
+
+![img](img.png)
+
+
+
 ## Features
 
 - 📄 **PDF Upload & Text Extraction** - Upload scientific PDFs and automatically extract text
