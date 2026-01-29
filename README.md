@@ -94,6 +94,7 @@ django-react-pdf-summarizer/
 └── README.md
 ```
 
+
 ## Installation & Setup
 
 ### 1. Clone the Repository
@@ -281,12 +282,24 @@ If you see raw JSON with `type`, `text`, `signature` fields, ensure you're using
 ```bash
 # Backend tests
 cd backend
-python manage.py test
+source ../pdfsummarizervenv/bin/activate  # Linux/macOS
+python manage.py test core
 
-# Frontend (if tests are configured)
-cd frontend
-npm test
+# With verbose output to see success messages
+python manage.py test core -v 2
 ```
+
+#### Backend Test Coverage
+
+| Test Class | Test Case | Description |
+|------------|-----------|-------------|
+| `UploadPDFViewTests` | `test_upload_pdf_success` | ✓ Test successful PDF upload |
+| `UploadPDFViewTests` | `test_upload_no_file` | ✓ Test upload without file returns error |
+| `DocumentModelTests` | `test_document_creation` | ✓ Test document creation with file |
+| `DocumentModelTests` | `test_document_uuid_is_unique` | ✓ Test document UUID is unique |
+| `DocumentModelTests` | `test_document_text_content_update` | ✓ Test document text content update |
+| `SummarizeViewTests` | `test_summarize_success` | ✓ Test successful document summarization |
+| `SummarizeViewTests` | `test_summarize_invalid_doc_id` | ✓ Test summarize with invalid document ID |
 
 ### Building for Production
 
