@@ -22,11 +22,11 @@ services:
         value: "https://pdf-summarizer-frontend.onrender.com"
     healthCheckPath: /core/
 
+staticSites:
   # Frontend React (Static Site)
-  - type: static
-    name: pdf-summarizer-frontend
+  - name: pdf-summarizer-frontend
     buildCommand: cd frontend && npm ci && npm run build
-    staticPublishPath: frontend/dist
+    publishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
         value: https://pdf-summarizer-backend.onrender.com/core
