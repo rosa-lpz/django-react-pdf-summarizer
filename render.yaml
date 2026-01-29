@@ -23,7 +23,7 @@ services:
     healthCheckPath: /core/
 
   # Frontend React (Static Site)
-  - type: static
+  - type: web
     name: pdf-summarizer-frontend
     runtime: static
     buildCommand: cd frontend && npm ci && npm run build
