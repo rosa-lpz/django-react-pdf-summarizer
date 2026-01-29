@@ -1,6 +1,6 @@
 # Render Blueprint - Infrastructure as Code
 # https://render.com/docs/blueprint-spec
-# Uses existing Dockerfiles for consistency with local development
+# Uses production Dockerfiles optimized for Render
 
 services:
   # Backend Django API (Docker)
@@ -9,7 +9,7 @@ services:
     runtime: docker
     region: oregon
     plan: free
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: ./backend/Dockerfile.prod
     dockerContext: ./backend
     envVars:
       - key: GEMINI_API_KEY
@@ -28,8 +28,8 @@ services:
     runtime: docker
     region: oregon
     plan: free
-    dockerfilePath: ./frontend/Dockerfile
+    dockerfilePath: ./frontend/Dockerfile.prod
     dockerContext: ./frontend
-    envVars:
+    buildArgs:
       - key: VITE_API_URL
         value: https://pdf-summarizer-backend.onrender.com/core
