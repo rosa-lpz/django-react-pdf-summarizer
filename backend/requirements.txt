@@ -1,0 +1,11 @@
+django>=5.2
+djangorestframework
+django-cors-headers
+langchain
+langchain-community
+langchain-text-splitters
+langchain-google-genai
+faiss-cpu
+pymupdf
+python-dotenv
+gunicorn

@@ -32,11 +32,19 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 
 
 
+## AI System Development (tools, workflow, MCP)
 
+* AI chatbots: Perplexity, ChatGPT
+  * [components-chatgpt.md](ai-chatbots-coding/components-chatgpt.md)
+  * [components-perplexity.md](ai-chatbots-coding/components-perplexity.md)
+  * [App that summarizes pdf files - Perplexity.md](ai-chatbots-coding/App that summarizes pdf files - Perplexity.md)
+* Coding assistants: Copilot using Claude Opus 4.5
+  * Solving backend issues
+  * Creating frontend code using react
+  * Solving frontend issues
+  * Creating backend tests
 
-
-
-## Architecture
+## Technologies and System Architecture
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
@@ -61,13 +69,13 @@ A full-stack application that summarizes PDF scientific articles with interactiv
 3. **Query Processing**: User questions trigger similarity search to find relevant chunks
 4. **Answer Generation**: Relevant context + question are sent to Gemini for accurate answers
 
-## Prerequisites
+### Prerequisites
 
 - Python 3.11+
 - Node.js 18+
 - npm or yarn
 
-## Project Structure
+### Project Structure
 
 ```
 django-react-pdf-summarizer/
@@ -97,14 +105,52 @@ django-react-pdf-summarizer/
 
 ## Installation & Setup
 
-### 1. Clone the Repository
+### Option 1: Docker (Recommended)
+
+The easiest way to run the application:
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd django-react-pdf-summarizer
+
+# Create .env file with your API key
+cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
+
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Or run in background
+docker-compose up -d --build
+```
+
+Access the application:
+- **Frontend**: http://localhost
+- **Backend API**: http://localhost:8000
+
+Docker commands:
+```bash
+# View logs
+docker-compose logs -f
+
+# Stop containers
+docker-compose down
+
+# Rebuild after changes
+docker-compose up --build
+```
+
+### Option 2: Manual Setup
+
+#### 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd django-react-pdf-summarizer
 ```
 
-### 2. Backend Setup
+#### 2. Backend Setup
 
 ```bash
 # Navigate to backend
@@ -120,10 +166,12 @@ source ../pdfsummarizervenv/bin/activate
 # ..\pdfsummarizervenv\Scripts\activate
 
 # Install Python dependencies
-pip install django djangorestframework django-cors-headers
-pip install langchain langchain-community langchain-text-splitters langchain-google-genai
-pip install faiss-cpu
-pip install pymupdf python-dotenv
+pip install -r requirements.txt
+
+# Or install manually:
+# pip install django djangorestframework django-cors-headers
+# pip install langchain langchain-community langchain-text-splitters langchain-google-genai
+# pip install faiss-cpu pymupdf python-dotenv gunicorn
 
 # Run migrations
 python manage.py migrate
@@ -144,6 +192,8 @@ npm install
 # Create environment file (optional)
 cp .env.example .env
 ```
+
+
 
 ## Running the Application
 
@@ -275,7 +325,14 @@ mkdir -p backend/media/pdfs
 **5. JSON in Response**
 If you see raw JSON with `type`, `text`, `signature` fields, ensure you're using the latest frontend code that properly extracts text content from Gemini responses.
 
-## Development
+
+
+## Database
+
+* SQLite
+* 
+
+## Tests
 
 ### Running Tests
 
@@ -309,9 +366,15 @@ cd frontend
 npm run build
 ```
 
+
+
+
+
 ## License
 
 MIT License - see LICENSE file for details.
+
+
 
 ## Contributing
 

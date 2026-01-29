@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: ./backend
+    container_name: pdf-summarizer-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DEBUG=False
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+    volumes:
+      - pdf_uploads:/app/media/pdfs
+      - sqlite_data:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/core/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build: ./frontend
+    container_name: pdf-summarizer-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pdf_uploads:
+    driver: local
+  sqlite_data:
+    driver: local
