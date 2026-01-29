@@ -22,7 +22,7 @@ services:
         value: "https://pdf-summarizer-frontend.onrender.com"
     healthCheckPath: /core/
 
-staticSites:
+#staticSites:
   # Frontend React (Static Site)
   - name: pdf-summarizer-frontend
     buildCommand: cd frontend && npm ci && npm run build
