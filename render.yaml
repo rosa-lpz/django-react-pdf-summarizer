@@ -22,14 +22,22 @@ services:
         value: "https://pdf-summarizer-frontend.onrender.com"
     healthCheckPath: /core/
 
-  # Frontend React (Docker with nginx)
+  # Frontend React (Static Site)
   - type: web
     name: pdf-summarizer-frontend
-    runtime: docker
+    runtime: static
     region: oregon
     plan: free
-    dockerfilePath: ./frontend/Dockerfile.prod
-    dockerContext: ./frontend
-    buildArgs:
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
       - key: VITE_API_URL
         value: https://pdf-summarizer-backend.onrender.com/core
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
