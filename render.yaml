@@ -7,8 +7,8 @@ services:
   - type: web
     name: pdf-summarizer-backend
     runtime: docker
-    region: oregon
-    plan: free
+    #region: oregon
+    #plan: free
     dockerfilePath: ./backend/Dockerfile.prod
     dockerContext: ./backend
     envVars:
@@ -22,11 +22,12 @@ services:
         value: "https://pdf-summarizer-frontend.onrender.com"
     healthCheckPath: /core/
 
-#staticSites:
   # Frontend React (Static Site)
-  - name: pdf-summarizer-frontend
+  - type: static
+    name: pdf-summarizer-frontend
+    runtime: static
     buildCommand: cd frontend && npm ci && npm run build
-    publishPath: frontend/dist
+    staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
         value: https://pdf-summarizer-backend.onrender.com/core
