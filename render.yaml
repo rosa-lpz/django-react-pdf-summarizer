@@ -1,0 +1,39 @@
+# Render Blueprint - Infrastructure as Code
+# https://render.com/docs/blueprint-spec
+# Uses existing Dockerfiles for consistency with local development
+
+services:
+  # Backend Django API (Docker)
+  - type: web
+    name: pdf-summarizer-backend
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://pdf-summarizer-frontend.onrender.com"
+    healthCheckPath: /core/
+    disk:
+      name: pdf-uploads
+      mountPath: /app/media/pdfs
+      sizeGB: 1
+
+  # Frontend React (Docker with nginx)
+  - type: web
+    name: pdf-summarizer-frontend
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: VITE_API_URL
+        value: https://pdf-summarizer-backend.onrender.com/core
